@@ -2,6 +2,8 @@ using EasyIn.Domain;
 using EasyIn.Repositories;
 using EasyIn.Repositories.Contexts;
 using EasyIn.Repositories.Interfaces;
+using EasyIn.Services;
+using EasyIn.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 namespace EasyIn
@@ -36,7 +39,8 @@ namespace EasyIn
             services.AddDbContext<MyContext>(options =>
                 options
                     .UseLazyLoadingProxies()
-                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                    );
 
             services.AddScoped<MyContext>();
 
@@ -45,6 +49,18 @@ namespace EasyIn
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPlatformRepository, PlatformRepository>();
             services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+
+            //Services
+            services.AddTransient<IEmailService, EmailService>();
+            services.Configure<EmailOptions>(options =>
+            {
+                options.HostAddress = Configuration["ExternalProviders:MailKit:SMTP:Address"];
+                options.HostPort = Convert.ToInt32(Configuration["ExternalProviders:MailKit:SMTP:Port"]);
+                options.HostUsername = Configuration["ExternalProviders:MailKit:SMTP:Account"];
+                options.HostPassword = Configuration["ExternalProviders:MailKit:SMTP:Password"];
+                options.SenderEmail = Configuration["ExternalProviders:MailKit:SMTP:SenderEmail"];
+                options.SenderName = Configuration["ExternalProviders:MailKit:SMTP:SenderName"];
+            });
 
             //Authentication
             var key = Encoding.ASCII.GetBytes(Settings.Secret);

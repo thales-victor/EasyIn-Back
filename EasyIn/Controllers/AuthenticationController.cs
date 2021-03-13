@@ -1,34 +1,36 @@
 ﻿using EasyIn.Models;
 using EasyIn.Repositories.Interfaces;
+using EasyIn.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EasyIn.Controllers
 {
     [ApiController]
-    [Route("api/user/{userId:int}/authentication")]
-    public class AuthenticationController : ControllerBase
+    [Authorize]
+    [Route("api/user/authentication")]
+    public class AuthenticationController : BaseController
     {
         private IAuthenticationRepository _authenticationRepository;
-        private IUserRepository _userRepository;
         private IPlatformRepository _platformRepository;
-
+            
         public AuthenticationController(IAuthenticationRepository authenticationRepository,
                                         IUserRepository userRepository,
-                                        IPlatformRepository platformRepository)
+                                        IPlatformRepository platformRepository) : base(userRepository)
         {
             _authenticationRepository = authenticationRepository;
-            _userRepository = userRepository;
             _platformRepository = platformRepository;
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult> Get(int userId, int id)
+        public async Task<ActionResult> Get(int id)
         {
             var authentication = await _authenticationRepository.GetById(id);
 
-            if (authentication?.User?.Id != userId)
+            if (!IsOwner(authentication?.User))
                 return NoContent();
 
             var result = new AuthenticationModel(authentication);
@@ -37,9 +39,9 @@ namespace EasyIn.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAll(int userId)
+        public async Task<ActionResult> GetAll()
         {
-            var authentications = await _authenticationRepository.GetByUserId(userId);
+            var authentications = await _authenticationRepository.GetByUserId(AuthenticatedUser.Id);
 
             if (authentications == null)
                 return NoContent();
@@ -52,10 +54,9 @@ namespace EasyIn.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(AuthenticationUpdateModel model)
         {
-            var user = await _userRepository.GetById(model.UserId);
             var platform = await _platformRepository.GetById(model.PlatformId);
 
-            var authentication = await _authenticationRepository.Add(new Authentication(user, platform, model.Password));
+            var authentication = await _authenticationRepository.Add(new Authentication(AuthenticatedUser, platform, model.Password));
 
             var result = new AuthenticationModel(authentication);
 
@@ -67,7 +68,7 @@ namespace EasyIn.Controllers
         {
             var authentication = await _authenticationRepository.GetById(model.Id);
 
-            if (authentication?.User?.Id != model.UserId)
+            if (!IsOwner(authentication?.User))
                 return NoContent();
 
             authentication.Update(model.Password);
@@ -80,11 +81,11 @@ namespace EasyIn.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int userId, int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var authentication = await _authenticationRepository.GetById(id);
 
-            if (authentication?.User?.Id != userId)
+            if (!IsOwner(authentication?.User))
                 return NoContent();
 
             authentication.Remove();

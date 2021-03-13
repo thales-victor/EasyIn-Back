@@ -2,6 +2,7 @@
 using EasyIn.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace EasyIn.Controllers
@@ -12,10 +13,12 @@ namespace EasyIn.Controllers
     public class UserController : ControllerBase
     {
         private IUserRepository _userRepository;
+        private IEmailService _emailService;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, IEmailService emailService)
         {
             _userRepository = userRepository;
+            _emailService = emailService;
         }
 
         [HttpGet("{id:int}")]
@@ -46,6 +49,27 @@ namespace EasyIn.Controllers
             var result = new UserModel(user);
 
             return Ok(result);
+        }
+
+        [HttpPost("ForgotPassword")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ForgotPassword(UserUpdateModel model)
+        {
+            if (!await _userRepository.AlreadyExists(model.Email))
+                return BadRequest("Usuário não encontrado");
+
+            _emailService.Send(
+                to: model.Email,
+                subject: "Recuperação de senha",
+                html: GetForgotPassworEmail()
+                );
+
+            return Ok();
+        }
+
+        private string GetForgotPassworEmail()
+        {
+            throw new NotImplementedException();
         }
 
         [HttpPut]

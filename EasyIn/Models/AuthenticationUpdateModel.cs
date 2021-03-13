@@ -8,7 +8,6 @@ namespace EasyIn.Models
     public class AuthenticationUpdateModel
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
         public int PlatformId { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
