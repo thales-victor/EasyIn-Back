@@ -2,10 +2,12 @@
 {
     public class AuthenticationListModel
     {
-        public string Platform { get; set; }
+        public int Id { get; private set; }
+        public string Platform { get; private set; }
 
         public AuthenticationListModel(Authentication authentication)
         {
+            Id = authentication.Id;
             Platform = authentication.Platform.Name;
         }
     }

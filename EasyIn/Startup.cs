@@ -58,7 +58,6 @@ namespace EasyIn
                 options.HostPort = Convert.ToInt32(Configuration["ExternalProviders:MailKit:SMTP:Port"]);
                 options.HostUsername = Configuration["ExternalProviders:MailKit:SMTP:Account"];
                 options.HostPassword = Configuration["ExternalProviders:MailKit:SMTP:Password"];
-                options.SenderEmail = Configuration["ExternalProviders:MailKit:SMTP:SenderEmail"];
                 options.SenderName = Configuration["ExternalProviders:MailKit:SMTP:SenderName"];
             });
 

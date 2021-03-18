@@ -8,7 +8,7 @@ namespace EasyIn.Controllers
 {
     [ApiController]
     [Route("api/login")]
-    public class LoginController : BaseController
+    public class LoginController : ControllerBase
     {
         private ILoginRepository _loginRepository;
 

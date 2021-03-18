@@ -22,5 +22,11 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Services\Models\ForgotPasswordEmail.html">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 
 </Project>

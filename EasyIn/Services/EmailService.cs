@@ -27,7 +27,7 @@ namespace EasyIn.Services
         {
             // create message
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(_appSettings.SenderEmail));
+            email.From.Add(MailboxAddress.Parse(_appSettings.HostUsername));
             email.To.Add(MailboxAddress.Parse(to));
             email.Subject = subject;
             email.Body = new TextPart(TextFormat.Html) 
@@ -37,7 +37,8 @@ namespace EasyIn.Services
 
             // send email
             using var smtp = new SmtpClient();
-            smtp.Connect(_appSettings.HostAddress, _appSettings.HostPort, SecureSocketOptions.StartTls);
+            smtp.Connect(_appSettings.HostAddress, _appSettings.HostPort);
+            smtp.AuthenticationMechanisms.Remove("XOAUTH2");
             smtp.Authenticate(_appSettings.HostUsername, _appSettings.HostPassword);
             smtp.Send(email);
             smtp.Disconnect(true);

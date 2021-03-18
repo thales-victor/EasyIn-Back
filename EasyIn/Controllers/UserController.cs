@@ -1,8 +1,11 @@
 ﻿using EasyIn.Models;
 using EasyIn.Repositories.Interfaces;
+using EasyIn.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EasyIn.Controllers
@@ -69,7 +72,34 @@ namespace EasyIn.Controllers
 
         private string GetForgotPassworEmail()
         {
-            throw new NotImplementedException();
+            string html = "";
+            try
+            {
+                string path = GetPathFileName();
+                html = System.IO.File.ReadAllText(path);
+
+                string pattern = @"#NewPassword";
+                string substitution = RandomPasswordGenerator.Generate(10);
+
+                var regex = new Regex(pattern, RegexOptions.Multiline);
+
+                html = regex.Replace(html, substitution);
+            }
+            catch { }
+
+            return html;
+        }
+
+        private static string GetPathFileName()
+        {
+            var path = AppDomain.CurrentDomain.BaseDirectory;
+            for (int i = 0; i < 4; i++)
+            {
+                path = Directory.GetParent(path).FullName;
+            }
+            path += "\\Services\\Models\\ForgotPasswordEmail.html";
+
+            return path;
         }
 
         [HttpPut]
