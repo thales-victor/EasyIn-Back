@@ -16,11 +16,17 @@ namespace EasyIn.Repositories
 
         public async Task<bool> AlreadyExists(string email)
         {
-            var user = await Queryable()
-                .WithEmail(email)
-                .FirstOrDefaultAsync();
-
+            var user = await GetByEmail(email);
             return user != null;
+        }
+
+        public async Task<User> GetByEmail(string email)
+        {
+            var user = await Queryable()
+               .WithEmail(email)
+               .FirstOrDefaultAsync();
+
+            return user;
         }
 
         public async Task<User> GetByUsername(string username)

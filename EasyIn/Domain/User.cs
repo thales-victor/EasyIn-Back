@@ -1,4 +1,5 @@
 using EasyIn.Domain;
+using System;
 using System.Collections.Generic;
 
 namespace EasyIn
@@ -8,6 +9,7 @@ namespace EasyIn
         public string Email { get; private set; }
         public string Username { get; private set; }
         public string Password { get; private set; }
+        public bool IsTemporaryPassword { get; private set; }
 
         public virtual List<Authentication> Authentications { get; private set; } = new List<Authentication>();
 
@@ -28,6 +30,7 @@ namespace EasyIn
             if (IsChangingPassword(password))
             {
                 Password = password;
+                IsTemporaryPassword = false;
             }
         }
 
@@ -39,6 +42,12 @@ namespace EasyIn
         private bool IsChangingPassword(string password)
         {
             return !string.IsNullOrEmpty(password) && Password != password;
+        }
+
+        public void SetTemporaryPassword(string password)
+        {
+            Password = password;
+            IsTemporaryPassword = true;
         }
     }
 }

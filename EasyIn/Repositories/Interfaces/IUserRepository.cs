@@ -10,5 +10,6 @@ namespace EasyIn.Repositories.Interfaces
     {
         Task<User> GetByUsername(string username);
         Task<bool> AlreadyExists(string email);
+        Task<User> GetByEmail(string email);
     }
 }

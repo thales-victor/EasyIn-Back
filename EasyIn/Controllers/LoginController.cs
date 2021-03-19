@@ -18,18 +18,14 @@ namespace EasyIn.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<dynamic>> Authenticate(UserModel model)
+        public async Task<ActionResult<dynamic>> Authenticate(UserLoginModel model)
         {
-            //var user = await _loginRepository.Get(model.Username, CryptoService.Encrypt(model.Password));
             var user = await _loginRepository.Get(model.Username, model.Password);
-
 
             if (user == null)
                 return NotFound(new { message = "Usuário ou senha inválidos" });
 
             var token = TokenService.GenerateToken(user);
-
-            user.HidePassword();
 
             return Ok(new
             {

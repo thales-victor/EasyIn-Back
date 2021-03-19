@@ -4,6 +4,7 @@ using EasyIn.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -60,34 +61,51 @@ namespace EasyIn.Controllers
         {
             if (!await _userRepository.AlreadyExists(model.Email))
                 return BadRequest("Usuário não encontrado");
+            try
+            {
+                var newPassword = RandomPasswordGenerator.Generate(10);
 
-            _emailService.Send(
-                to: model.Email,
-                subject: "Recuperação de senha",
-                html: GetForgotPassworEmail()
-                );
+                if (!Debugger.IsAttached)
+                {
+                    _emailService.Send(
+                    to: model.Email,
+                    subject: "Recuperação de senha",
+                    html: GetForgotPassworEmail(newPassword)
+                    );
+                }
 
-            return Ok();
+                var user = await _userRepository.GetByEmail(model.Email);
+                user.SetTemporaryPassword(newPassword);
+
+                await _userRepository.Update(user);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        private string GetForgotPassworEmail()
+        private string GetForgotPassworEmail(string substitution)
         {
-            string html = "";
             try
             {
                 string path = GetPathFileName();
-                html = System.IO.File.ReadAllText(path);
+                string html = System.IO.File.ReadAllText(path);
 
                 string pattern = @"#NewPassword";
-                string substitution = RandomPasswordGenerator.Generate(10);
 
                 var regex = new Regex(pattern, RegexOptions.Multiline);
 
                 html = regex.Replace(html, substitution);
-            }
-            catch { }
 
-            return html;
+                return html;
+            }
+            catch 
+            {
+                return string.Empty;
+            }
         }
 
         private static string GetPathFileName()
