@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace EasyIn.Repositories
 {
-    public class AuthenticationRepository : RepositoryBase<Authentication>, IAuthenticationRepository
+    public class CredentialRepository : RepositoryBase<Credential>, ICredentialRepository
     {
-        public AuthenticationRepository(MyContext context) : base(context) { }
+        public CredentialRepository(MyContext context) : base(context) { }
 
-        public async Task<List<Authentication>> GetByUserId(int userId)
+        public async Task<List<Credential>> GetByUserId(int userId)
         {
             return await Queryable()
                 .WithUserId(userId)

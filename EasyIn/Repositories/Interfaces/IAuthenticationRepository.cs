@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace EasyIn.Repositories.Interfaces
 {
-    public interface IAuthenticationRepository : IRepository<Authentication>
+    public interface ICredentialRepository : IRepository<Credential>
     {
-        Task<List<Authentication>> GetByUserId(int userId);
+        Task<List<Credential>> GetByUserId(int userId);
     }
 }

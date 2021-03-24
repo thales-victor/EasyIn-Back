@@ -18,7 +18,7 @@ namespace EasyIn.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<dynamic>> Authenticate(UserLoginModel model)
+        public async Task<ActionResult<dynamic>> Login(UserLoginModel model)
         {
             var user = await _loginRepository.Get(model.Username, model.Password);
 

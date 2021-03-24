@@ -48,7 +48,7 @@ namespace EasyIn
             services.AddScoped<ILoginRepository, LoginRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPlatformRepository, PlatformRepository>();
-            services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+            services.AddScoped<ICredentialRepository, CredentialRepository>();
 
             //Services
             services.AddTransient<IEmailService, EmailService>();

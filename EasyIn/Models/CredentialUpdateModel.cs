@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace EasyIn.Models
+﻿namespace EasyIn.Models
 {
-    public class AuthenticationUpdateModel
+    public class CredentialUpdateModel
     {
         public int Id { get; set; }
         public int PlatformId { get; set; }
+        public string Username { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
     }

@@ -11,7 +11,7 @@ namespace EasyIn
         public string Password { get; private set; }
         public bool IsTemporaryPassword { get; private set; }
 
-        public virtual List<Authentication> Authentications { get; private set; } = new List<Authentication>();
+        public virtual List<Credential> Credentials { get; private set; } = new List<Credential>();
 
         public User() { }
 
