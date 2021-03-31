@@ -12,12 +12,11 @@ namespace EasyIn.Services
         const string LOWER_CASE = "abcdefghijklmnopqursuvwxyz";
         const string UPPER_CAES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         const string NUMBERS = "123456789";
-        const string SPECIALS = @"!@£$%^&*()#€";
+        const string SPECIALS = @"!@$%&*()#";
 
         public static string Generate(int passwordSize, bool useLowercase = true, bool useUppercase = true, bool useNumbers = true, bool useSpecial = true)
         {
-            var _password = new char[passwordSize];
-            var charSet = "";
+            var charSet = string.Empty;
             
             if (useLowercase)
                 charSet += LOWER_CASE;
@@ -31,12 +30,14 @@ namespace EasyIn.Services
             if (useSpecial)
                 charSet += SPECIALS;
 
+            var password = string.Empty;
+
             for (int i = 0; i < passwordSize; i++)
             {
-                _password[i] = charSet[Random.Next(charSet.Length - 1)];
+                password += charSet[Random.Next(charSet.Length - 1)];
             }
 
-            return string.Join(null, _password);
+            return password;
         }
     }
 }
