@@ -15,8 +15,8 @@ namespace EasyIn.Controllers
     [Route("api/user/credential")]
     public class CredentialController : ControllerBase
     {
-        private ICredentialRepository _credentialRepository;
-        private IPlatformRepository _platformRepository;
+        private readonly ICredentialRepository _credentialRepository;
+        private readonly IPlatformRepository _platformRepository;
 
         public CredentialController(ICredentialRepository credentialRepository,
                                     IUserRepository userRepository,

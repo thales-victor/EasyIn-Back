@@ -16,8 +16,8 @@ namespace EasyIn.Controllers
     [Route("api/user")]
     public class UserController : ControllerBase
     {
-        private IUserRepository _userRepository;
-        private IEmailService _emailService;
+        private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
 
         public UserController(IUserRepository userRepository, IEmailService emailService)
         {
