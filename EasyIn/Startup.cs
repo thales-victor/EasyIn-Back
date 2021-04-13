@@ -19,20 +19,46 @@ namespace EasyIn
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        private IWebHostEnvironment Env { get; }
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Env = env;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(c =>
+            if (Env.IsDevelopment())
             {
-                c.AddPolicy("Development", options => options.WithOrigins("http://localhost:3000"));
-            });
+                services.AddCors(Options =>
+                {
+                    Options.AddPolicy(
+                        "CorsPolicy",
+                        builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        //.AllowCredentials()
+                        );
+                });
+            }
+            else
+            {
+                services.AddCors(Options =>
+                {
+                    Options.AddPolicy(
+                        "CorsPolicy",
+                        builder => builder
+                        .WithOrigins(Configuration.GetValue<string>("CrossDomainWeb") ?? default)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+                });
+            }
 
             services.AddControllers();
 
@@ -83,14 +109,14 @@ namespace EasyIn
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (Env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options => options.WithOrigins("https://localhost:3000"));
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 
