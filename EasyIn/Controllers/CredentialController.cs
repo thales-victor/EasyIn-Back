@@ -13,18 +13,17 @@ namespace EasyIn.Controllers
     [ApiController]
     [Authorize]
     [Route("api/user/credential")]
-    public class CredentialController : ControllerBase
+    public class CredentialController : BaseController
     {
         private readonly ICredentialRepository _credentialRepository;
         private readonly IPlatformRepository _platformRepository;
 
         public CredentialController(ICredentialRepository credentialRepository,
-                                    IUserRepository userRepository,
-                                    IPlatformRepository platformRepository)
+                                    IPlatformRepository platformRepository,
+                                    IUserRepository userRepository) : base(userRepository)
         {
             _credentialRepository = credentialRepository;
             _platformRepository = platformRepository;
-            OAuthUser.InitAuthUser(userRepository);
         }
 
         [HttpGet]

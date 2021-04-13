@@ -14,21 +14,21 @@ namespace EasyIn.Controllers
     [ApiController]
     [Authorize]
     [Route("api/user")]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
 
-        public UserController(IUserRepository userRepository, IEmailService emailService)
+        public UserController(IUserRepository userRepository, IEmailService emailService): base(userRepository)
         {
             _userRepository = userRepository;
             _emailService = emailService;
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult> Get(int id)
+        [HttpGet]
+        public async Task<ActionResult> Get()
         {
-            var user = await _userRepository.GetById(id);
+            var user = await _userRepository.GetById(User.GetId());
 
             if (user == null)
                 return NoContent();
@@ -40,7 +40,7 @@ namespace EasyIn.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult> Post(UserUpdateModel model)
+        public async Task<ActionResult> Post(UserCreateModel model)
         {
             if (await _userRepository.AlreadyExists(model.Email))
                 return BadRequest("Usuário já cadastrado");
@@ -87,6 +87,49 @@ namespace EasyIn.Controllers
             }
         }
 
+
+        [HttpPut]
+        public async Task<ActionResult> Put(UserUpdateModel model)
+        {
+            var user = await _userRepository.GetById(User.GetId());
+
+            if (user == null)
+                return NoContent();
+
+            if (user.IsChangingPassword(model.NewPassword))
+            {
+                if (user.Password != model.OldPassword)
+                    return BadRequest("Senha antiga incorreta");
+
+                if (model.NewPassword != model.ConfirmNewPassword)
+                    return BadRequest("Senha e confirmação de senha não coincidem");
+            }
+
+            user.Update(model.Email, model.Username, model.NewPassword);
+
+            await _userRepository.Update(user);
+
+            var result = new UserModel(user);
+
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> Delete()
+        {
+            var user = await _userRepository.GetById(User.GetId());
+
+            if (user == null)
+                return NoContent();
+
+            user.Remove();
+
+            await _userRepository.Update(user);
+
+            return Ok();
+        }
+
+
         private string GetForgotPassworEmail(string substitution)
         {
             try
@@ -102,7 +145,7 @@ namespace EasyIn.Controllers
 
                 return html;
             }
-            catch 
+            catch
             {
                 return string.Empty;
             }
@@ -118,38 +161,6 @@ namespace EasyIn.Controllers
             path += "\\Services\\Models\\ForgotPasswordEmail.html";
 
             return path;
-        }
-
-        [HttpPut]
-        public async Task<ActionResult> Put(UserUpdateModel model)
-        {
-            var user = await _userRepository.GetById(model.Id);
-
-            if (user == null)
-                return NoContent();
-
-            user.Update(model.Email, model.Username, model.Password);
-
-            await _userRepository.Update(user);
-
-            var result = new UserModel(user);
-
-            return Ok(result);
-        }
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var user = await _userRepository.GetById(id);
-
-            if (user == null)
-                return NoContent();
-
-            user.Remove();
-
-            await _userRepository.Update(user);
-
-            return Ok();
         }
     }
 }
