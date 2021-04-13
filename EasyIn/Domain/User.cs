@@ -39,7 +39,7 @@ namespace EasyIn
             Password = string.Empty;
         }
 
-        private bool IsChangingPassword(string password)
+        public bool IsChangingPassword(string password)
         {
             return !string.IsNullOrEmpty(password) && Password != password;
         }
