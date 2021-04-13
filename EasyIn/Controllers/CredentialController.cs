@@ -56,7 +56,7 @@ namespace EasyIn.Controllers
         public async Task<ActionResult> Post(CredentialUpdateModel model)
         {
             if (!await IsValidCredential(model))
-                return BadRequest();
+                return BadRequest(new ResponseError("Parâmetros inválidos"));
 
             var platform = await _platformRepository.GetById(model.PlatformId);
             var authUser = await User.ToEntityUser();
@@ -89,7 +89,7 @@ namespace EasyIn.Controllers
         public async Task<ActionResult> Put(CredentialUpdateModel model)
         {
             if (!await IsValidCredential(model))
-                return BadRequest();
+                return BadRequest(new ResponseError("Parâmetros inválidos"));
 
             var credential = await _credentialRepository.GetById(model.Id);
 

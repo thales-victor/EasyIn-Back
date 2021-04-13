@@ -23,7 +23,7 @@ namespace EasyIn.Controllers
             var user = await _loginRepository.Get(model.Username, model.Password);
 
             if (user == null)
-                return NotFound(new { message = "Usuário ou senha inválidos" });
+                return BadRequest(new ResponseError("Usuário ou senha inválidos"));
 
             var token = TokenService.GenerateToken(user);
 

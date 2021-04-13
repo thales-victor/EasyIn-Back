@@ -43,10 +43,10 @@ namespace EasyIn.Controllers
         public async Task<ActionResult> Post(UserCreateModel model)
         {
             if (await _userRepository.AlreadyExists(model.Email))
-                return BadRequest("Usuário já cadastrado");
+                return BadRequest(new ResponseError("Usuário já cadastrado"));
 
             if (model.Password != model.ConfirmPassword)
-                return BadRequest("Senha e confirmação de senha não coincidem");
+                return BadRequest(new ResponseError("Senha e confirmação de senha não coincidem"));
 
             var user = await _userRepository.Add(new User(model.Email, model.Username, model.Password));
 
@@ -60,7 +60,7 @@ namespace EasyIn.Controllers
         public async Task<ActionResult> ForgotPassword(UserUpdateModel model)
         {
             if (!await _userRepository.AlreadyExists(model.Email))
-                return BadRequest("Usuário não encontrado");
+                return BadRequest(new ResponseError("Usuário não encontrado"));
             try
             {
                 var newPassword = RandomPasswordGenerator.Generate(10);
@@ -83,7 +83,7 @@ namespace EasyIn.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new ResponseError(ex.Message));
             }
         }
 
@@ -99,10 +99,10 @@ namespace EasyIn.Controllers
             if (user.IsChangingPassword(model.NewPassword))
             {
                 if (user.Password != model.OldPassword)
-                    return BadRequest("Senha antiga incorreta");
+                    return BadRequest(new ResponseError("Senha antiga incorreta"));
 
                 if (model.NewPassword != model.ConfirmNewPassword)
-                    return BadRequest("Senha e confirmação de senha não coincidem");
+                    return BadRequest(new ResponseError("Senha e confirmação de senha não coincidem"));
             }
 
             user.Update(model.Email, model.Username, model.NewPassword);
