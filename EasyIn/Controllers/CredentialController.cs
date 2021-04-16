@@ -47,7 +47,7 @@ namespace EasyIn.Controllers
             if (!User.IsOwner(credential?.User))
                 return NoContent();
 
-            var result = new CredentialModel(credential);
+            var result = new CredentialModel(credential, true);
 
             return Ok(result);
         }
