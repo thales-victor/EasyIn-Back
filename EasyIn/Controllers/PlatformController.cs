@@ -52,7 +52,7 @@ namespace EasyIn.Controllers
 
             var result = new PlatformModel(platform);
 
-            return Ok(result);
+            return Created("", result);
         }
 
         [HttpPut]
