@@ -18,7 +18,7 @@ namespace EasyIn.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<dynamic>> Login(UserLoginModel model)
+        public async Task<ActionResult> Login(LoginRequestModel model)
         {
             var user = await _loginRepository.Get(model.Username, model.Password);
 
@@ -27,11 +27,7 @@ namespace EasyIn.Controllers
 
             var token = TokenService.GenerateToken(user);
 
-            return Ok(new
-            {
-                user = new UserModel(user),
-                token = token
-            });
+            return Ok(new LoginResultModel(user, token));
         }
     }
 }
