@@ -1,4 +1,5 @@
 using EasyIn.Domain;
+using EasyIn.Models;
 using EasyIn.Repositories;
 using EasyIn.Repositories.Contexts;
 using EasyIn.Repositories.Interfaces;
@@ -6,12 +7,16 @@ using EasyIn.Services;
 using EasyIn.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Text;
 
@@ -123,6 +128,22 @@ namespace EasyIn
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseExceptionHandler(a => a.Run(async context =>
+            {
+                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                var exception = exceptionHandlerPathFeature.Error;
+
+                var result = JsonConvert.SerializeObject(
+                    new ResponseError("Erro não tratado. Entre em contato com o administrador do sistema"),
+                    new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
+
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(result);
+            }));
 
             app.UseEndpoints(endpoints =>
             {
