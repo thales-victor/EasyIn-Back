@@ -98,7 +98,7 @@ namespace EasyIn.Controllers
 
             await _credentialRepository.Update(credential);
 
-            var result = new CredentialModel(credential);
+            var result = new CredentialModel(credential, true);
 
             return Ok(result);
         }
