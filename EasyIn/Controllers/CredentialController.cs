@@ -12,7 +12,7 @@ namespace EasyIn.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("api/user/credential")]
+    [Route("api/credential")]
     public class CredentialController : BaseController
     {
         private readonly ICredentialRepository _credentialRepository;
@@ -47,7 +47,7 @@ namespace EasyIn.Controllers
             if (!User.IsOwner(credential?.User))
                 return NoContent();
 
-            var result = new CredentialModel(credential);
+            var result = new CredentialModel(credential, true);
 
             return Ok(result);
         }
@@ -65,14 +65,15 @@ namespace EasyIn.Controllers
 
             var result = new CredentialModel(credential);
 
-            return Ok(result);
+            return Created("", result);
         }
 
-        private async Task<bool> IsValidCredential(CredentialUpdateModel model)
+        private async Task<bool> IsValidCredential(CredentialUpdateModel model, bool ignoreConfirmPassword = false)
         {
-            if (string.IsNullOrWhiteSpace(model.Username) ||
-                string.IsNullOrWhiteSpace(model.Password) ||
-                string.IsNullOrWhiteSpace(model.ConfirmPassword))
+            if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
+                return false;
+
+            if (!ignoreConfirmPassword && string.IsNullOrWhiteSpace(model.ConfirmPassword))
                 return false;
 
             if (model.Id != 0)
@@ -88,7 +89,7 @@ namespace EasyIn.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(CredentialUpdateModel model)
         {
-            if (!await IsValidCredential(model))
+            if (!await IsValidCredential(model, true))
                 return BadRequest(new ResponseError("Parâmetros inválidos"));
 
             var credential = await _credentialRepository.GetById(model.Id);
@@ -97,7 +98,7 @@ namespace EasyIn.Controllers
 
             await _credentialRepository.Update(credential);
 
-            var result = new CredentialModel(credential);
+            var result = new CredentialModel(credential, true);
 
             return Ok(result);
         }

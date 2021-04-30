@@ -2,15 +2,17 @@
 {
     public class CredentialModel
     {
-        public PlatformModel Platform { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public int Id { get; private set; }
+        public PlatformModel Platform { get; private set; }
+        public string Username { get; private set; }
+        public string Password { get; private set; }
 
-        public CredentialModel(Credential credential)
+        public CredentialModel(Credential credential, bool showPassword = false)
         {
-            Platform = new PlatformModel(credential.Platform);
+            Id = credential.Id;
             Username = credential.Username;
-            Password = string.Empty;
+            Password = showPassword ? credential.Password : string.Empty;
+            Platform = new PlatformModel(credential.Platform);
         }
     }
 }

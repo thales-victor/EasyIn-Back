@@ -52,7 +52,7 @@ namespace EasyIn.Controllers
 
             var result = new UserModel(user);
 
-            return Ok(result);
+            return Created("", result);
         }
 
         [HttpPost("ForgotPassword")]
