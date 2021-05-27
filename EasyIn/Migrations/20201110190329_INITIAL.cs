@@ -23,6 +23,8 @@ namespace EasyIn.Migrations
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
                 });
+
+            migrationBuilder.Sql($"INSERT INTO [dbo].[User] (CreatedAt, Removed, Email, Username, Password) values('2021-01-01 00:00:00', 0, 'admin@admin', 'Admin', 'admin')");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

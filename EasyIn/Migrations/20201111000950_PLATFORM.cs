@@ -21,6 +21,8 @@ namespace EasyIn.Migrations
                 {
                     table.PrimaryKey("PK_Platform", x => x.Id);
                 });
+
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'EasyIn')");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

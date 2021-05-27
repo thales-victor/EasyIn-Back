@@ -11,6 +11,7 @@ namespace EasyIn.Repositories.Contexts
         public DbSet<User> User { get; set; }
         public DbSet<Platform> Platform { get; set; }
         public DbSet<Credential> Credential { get; set; }
+        public DbSet<QrCodeLogin> QrCodeLogin { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

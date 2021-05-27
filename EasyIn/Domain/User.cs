@@ -1,6 +1,7 @@
 using EasyIn.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EasyIn
 {
@@ -48,6 +49,17 @@ namespace EasyIn
         {
             Password = password;
             IsTemporaryPassword = true;
+        }
+
+        public List<Credential> GetCredentials(int platformId, int credentialId)
+        {
+            var credentials = Credentials.Where(c => c.Platform.Id == platformId);
+
+
+            if (credentialId != 0)
+                credentials = credentials.Where(c => c.Id == credentialId);
+
+            return credentials.ToList();
         }
     }
 }

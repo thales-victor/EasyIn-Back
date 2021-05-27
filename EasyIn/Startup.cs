@@ -26,6 +26,7 @@ namespace EasyIn
     {
         public IConfiguration Configuration { get; }
         private IWebHostEnvironment Env { get; }
+        private readonly string CorsPolicy = "CorsPolicy";
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
@@ -42,8 +43,9 @@ namespace EasyIn
                 services.AddCors(Options =>
                 {
                     Options.AddPolicy(
-                        "CorsPolicy",
+                        CorsPolicy,
                         builder => builder
+                        //.WithOrigins("http://localhost:3000")
                         .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader()
@@ -56,7 +58,7 @@ namespace EasyIn
                 services.AddCors(Options =>
                 {
                     Options.AddPolicy(
-                        "CorsPolicy",
+                        CorsPolicy,
                         builder => builder
                         .WithOrigins(Configuration.GetValue<string>("CrossDomainWeb") ?? default)
                         .AllowAnyMethod()
@@ -66,6 +68,7 @@ namespace EasyIn
             }
 
             services.AddControllers();
+            services.AddHttpClient();
 
             services.AddDbContext<MyContext>(options =>
                 options
@@ -80,6 +83,7 @@ namespace EasyIn
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPlatformRepository, PlatformRepository>();
             services.AddScoped<ICredentialRepository, CredentialRepository>();
+            services.AddScoped<IQrCodeLoginRepository, QrCodeLoginRepository>();
 
             //Services
             services.AddTransient<IEmailService, EmailService>();
@@ -121,7 +125,9 @@ namespace EasyIn
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors("CorsPolicy");
+            app.UseCors(CorsPolicy);
+
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -135,7 +141,8 @@ namespace EasyIn
                 var exception = exceptionHandlerPathFeature.Error;
 
                 var result = JsonConvert.SerializeObject(
-                    new ResponseError("Erro não tratado. Entre em contato com o administrador do sistema"),
+                    //new ResponseError("Erro não tratado. Entre em contato com o administrador do sistema"),
+                    new ResponseError(exception.Message + exception.InnerException != null ? " - " + exception.InnerException.Message : ""),
                     new JsonSerializerSettings
                     {
                         ContractResolver = new CamelCasePropertyNamesContractResolver()
