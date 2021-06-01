@@ -51,6 +51,15 @@ namespace EasyIn.Controllers
 
             return Ok(result);
         }
+        
+        [AllowAnonymous]
+        [HttpGet("GeneratePassword")]
+        public ActionResult GeneratePassword([FromQuery] GeneratePasswordModel model)
+        {
+            var password = RandomPasswordGenerator.Generate(model);
+
+            return Ok(new GeneratePasswordResultModel(password));
+        }
 
         [HttpPost]
         public async Task<ActionResult> Post(CredentialUpdateModel model)

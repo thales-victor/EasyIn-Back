@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyIn.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,11 @@ namespace EasyIn.Services
         const string UPPER_CAES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         const string NUMBERS = "123456789";
         const string SPECIALS = @"!@$%&*()#";
+
+        public static string Generate(GeneratePasswordModel model)
+        {
+            return Generate(model.PasswordSize, model.UseLowercase, model.UseUppercase, model.UseNumbers, model.UseSpecial);
+        }
 
         public static string Generate(int passwordSize, bool useLowercase = true, bool useUppercase = true, bool useNumbers = true, bool useSpecial = true)
         {
