@@ -36,6 +36,10 @@ namespace EasyIn.Controllers
             if (login == null)
                 return BadRequest(new ResponseError("Tentativa de login não encontrada ou já expirou"));
 
+            login.Remove();
+
+            await _qrCodeLoginRepository.Update(login);
+
             var result = new QrCodeLoginResultModel(login.Credential.Username, login.Credential.Password);
 
             return Ok(result);

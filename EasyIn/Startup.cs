@@ -5,6 +5,7 @@ using EasyIn.Repositories.Contexts;
 using EasyIn.Repositories.Interfaces;
 using EasyIn.Services;
 using EasyIn.Services.Models;
+using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -38,34 +39,18 @@ namespace EasyIn
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            if (Env.IsDevelopment())
+            services.AddCors(Options =>
             {
-                services.AddCors(Options =>
-                {
-                    Options.AddPolicy(
-                        CorsPolicy,
-                        builder => builder
-                        //.WithOrigins("http://localhost:3000")
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        //.AllowCredentials()
-                        );
-                });
-            }
-            else
-            {
-                services.AddCors(Options =>
-                {
-                    Options.AddPolicy(
-                        CorsPolicy,
-                        builder => builder
-                        .WithOrigins(Configuration.GetValue<string>("CrossDomainWeb") ?? default)
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
-                });
-            }
+                Options.AddPolicy(
+                    CorsPolicy,
+                    builder => builder
+                    //.WithOrigins("http://localhost:3000")
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    //.AllowCredentials()
+                    );
+            });
 
             services.AddControllers();
             services.AddHttpClient();
@@ -98,23 +83,26 @@ namespace EasyIn
 
             //Authentication
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+            services
+                .AddAuthentication(x =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
+            services.AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme).AddCertificate();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

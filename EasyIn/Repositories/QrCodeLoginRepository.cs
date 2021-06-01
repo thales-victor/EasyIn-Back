@@ -16,7 +16,8 @@ namespace EasyIn.Repositories
             var query = Queryable()
                         .WithPlatformId(platformId)
                         .WithBrowserToken(browserToken)
-                        .NotExpired();
+                        .NotExpired()
+                        .NotRemoved();
 
             return await query.FirstOrDefaultAsync();
         }

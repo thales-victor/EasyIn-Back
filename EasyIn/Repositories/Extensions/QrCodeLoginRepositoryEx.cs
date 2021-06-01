@@ -19,6 +19,11 @@ namespace EasyIn.Repositories.Extensions
         {
             return query.Where(q => q.ExpirationDate > DateTime.UtcNow);
         }
+
+        public static IQueryable<QrCodeLogin> NotRemoved(this IQueryable<QrCodeLogin> query)
+        {
+            return query.Where(q => !q.Removed);
+        }
     }
 
 }
