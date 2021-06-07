@@ -9,5 +9,6 @@ namespace EasyIn.Repositories.Interfaces
     public interface IQrCodeLoginRepository : IRepository<QrCodeLogin>
     {
         Task<QrCodeLogin> Get(int platformId, string browserToken);
+        Task<List<QrCodeLogin>> GetAllByUser(int userId);
     }
 }

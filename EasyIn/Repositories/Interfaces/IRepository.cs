@@ -14,6 +14,6 @@ namespace EasyIn.Repositories.Interfaces
         Task Update(TEntity entity);
         Task DeleteById(int entity);
         Task<int> SaveChanges();
-        IQueryable<TEntity> Queryable();
+        IQueryable<TEntity> Queryable(bool ignoreRemoved);
     }
 }

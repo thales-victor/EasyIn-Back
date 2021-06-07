@@ -53,11 +53,14 @@ namespace EasyIn.Repositories.RepositoryBase
                 .FirstOrDefaultAsync(e => e.Id.Equals(id) && !e.Removed);
         }
 
-        public IQueryable<TEntity> Queryable()
+        public IQueryable<TEntity> Queryable(bool ignoreRemoved = false)
         {
-            return Entities
-                //.AsNoTracking()
-                .Where(e => !e.Removed);
+            var queryable = Entities.AsQueryable();
+
+            if (!ignoreRemoved)
+                queryable = queryable.Where(e => !e.Removed);
+
+            return queryable;
         }
 
         public async Task<int> SaveChanges()

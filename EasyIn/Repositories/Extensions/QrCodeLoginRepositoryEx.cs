@@ -24,6 +24,11 @@ namespace EasyIn.Repositories.Extensions
         {
             return query.Where(q => !q.Removed);
         }
+
+        public static IQueryable<QrCodeLogin> WithUserId(this IQueryable<QrCodeLogin> query, int userId)
+        {
+            return query.Where(q => q.Credential.User.Id == userId);
+        }
     }
 
 }
