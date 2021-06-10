@@ -52,13 +52,14 @@ namespace EasyIn.Controllers
             return Ok(result);
         }
         
-        [AllowAnonymous]
         [HttpGet("GeneratePassword")]
         public ActionResult GeneratePassword([FromQuery] GeneratePasswordModel model)
         {
             var password = RandomPasswordGenerator.Generate(model);
 
-            return Ok(new GeneratePasswordResultModel(password));
+            var result = new GeneratePasswordResultModel(password);
+
+            return Ok(result);
         }
 
         [HttpPost]
