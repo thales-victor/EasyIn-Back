@@ -23,6 +23,20 @@ namespace EasyIn.Migrations
                 });
 
             migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'EasyIn')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Twitter')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Facebook')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Instagram')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Google')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Pinterest')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Linkedin')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Netflix')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Spotify')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Amazon')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Disney+')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Tumblr')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Mercado Livre')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Magazine Luiza')");
+            migrationBuilder.Sql("INSERT INTO Platform (CreatedAt, Removed, Name) Values('2021-01-01 00:00:00', 0, 'Americanas')");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

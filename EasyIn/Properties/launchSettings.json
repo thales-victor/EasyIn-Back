@@ -3,12 +3,12 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost/easyIn",
+      "applicationUrl": "http://localhost/EasyIn-Back",
       "sslPort": 0
     },
     "iisExpress": {
-      "applicationUrl": "http://localhost:5000",
-      "sslPort": 44347
+      "applicationUrl": "http://localhost/EasyIn-Back",
+      "sslPort": 0
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",

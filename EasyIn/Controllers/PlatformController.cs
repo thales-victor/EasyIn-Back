@@ -27,7 +27,11 @@ namespace EasyIn.Controllers
             if (platforms == null)
                 return NoContent();
 
-            var result = platforms.Select(p => new PlatformModel(p)).ToList();
+            var result = platforms
+                            .OrderByDescending(p => p.AllowIntegratedLogin)
+                            .ThenBy(p => p.Name)
+                            .Select(p => new PlatformModel(p))
+                            .ToList();
 
             return Ok(result);
         }

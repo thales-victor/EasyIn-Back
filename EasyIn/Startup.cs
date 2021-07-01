@@ -86,6 +86,11 @@ namespace EasyIn
                 options.SenderName = Configuration["ExternalProviders:MailKit:SMTP:SenderName"];
             });
 
+            services.Configure<IISOptions>(options =>
+            {
+                options.ForwardClientCertificate = false;
+            });
+
             //Authentication
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services
@@ -183,7 +188,7 @@ namespace EasyIn
             });
 
             app.UseSwagger();
-            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "EasyIn"));
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("../swagger/v1/swagger.json", "EasyIn"));
         }
     }
 }

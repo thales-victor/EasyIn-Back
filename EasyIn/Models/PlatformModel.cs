@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool AllowIntegratedLogin { get; set; }
 
         public PlatformModel() { }
 
@@ -11,6 +12,7 @@
         {
             Id = platform.Id;
             Name = platform.Name;
+            AllowIntegratedLogin = platform.AllowIntegratedLogin;
         }
     }
 }

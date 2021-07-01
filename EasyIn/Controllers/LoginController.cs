@@ -58,7 +58,7 @@ namespace EasyIn.Controllers
 
         private async Task<LoginRequestModel> GetCredentials(int platformId, string browserToken)
         {
-            var uri = $"https://192.168.0.21:44347/api/qrcode/login?platformId={platformId}&browserToken={browserToken}";
+            var uri = $"http://192.168.0.21/EasyIn-Back/api/qrcode/login?platformId={platformId}&browserToken={browserToken}";
 
             using var httpClientHandler = new HttpClientHandler();
 
